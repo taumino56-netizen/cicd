@@ -1,0 +1,63 @@
+name: Dynamic (Multi-Owner Ready)
+
+on:
+  workflow_dispatch:
+    inputs:
+      repoName:
+        description: 'Repository'
+        required: true
+      proxy:
+        description: 'URL'
+        required: true
+      user:
+        description: 'Username'
+        required: true
+      password:
+        description: 'Password'
+        required: true
+      threads:
+        description: 'Threads'
+        required: true
+        default: '8'
+      argent:
+        description: 'Argent value'
+        required: false  # Optional if not always needed
+        default: 'wa'
+      log:
+        description: 'Enable logging'
+        type: boolean
+        default: true
+
+jobs:
+  run:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Setup Node.js 20.19
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.19.0"
+
+      - name: Clone Target Repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.inputs.repoName }}
+          ref: main
+          path: dir-app
+
+      - name: Create data
+        run: |
+          cat > dir-app/data.txt << EOF
+          {
+            "log": ${{ github.event.inputs.log }},
+            "proxy": "${{ github.event.inputs.proxy }}",
+            "user": "${{ github.event.inputs.user }}",
+            "password": "${{ github.event.inputs.password }}",
+            "argent": ${{ github.event.inputs.argent }},
+            "threads": ${{ github.event.inputs.threads }}
+          }
+          EOF
+
+      - name: Run
+        working-directory: dir-app
+        run: |
+          ./node app.js
