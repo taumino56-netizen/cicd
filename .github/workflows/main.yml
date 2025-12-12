@@ -1,4 +1,4 @@
-name: Dynamic (Multi-Owner Ready)
+name: CI
 
 on:
   workflow_dispatch:
@@ -18,46 +18,45 @@ on:
       threads:
         description: 'Threads'
         required: true
-        default: '8'
-      argent:
-        description: 'Argent value'
-        required: false  # Optional if not always needed
-        default: 'wa'
+        default: '3'
       log:
         description: 'Enable logging'
         type: boolean
         default: true
+      port:
+        description: 'Port'
+        default: '3306'
+      host:
+        description: "Host"
+        default: "127.0.0.1"
+
 
 jobs:
-  run:
+  run-script:
+    name: Run script
     runs-on: ubuntu-22.04
     steps:
-      - name: Setup Node.js 20.19
-        uses: actions/setup-node@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          node-version: "20.19.0"
+          python-version: "3.13.3"
 
-      - name: Clone Target Repository
+      - name: Clone
         uses: actions/checkout@v4
         with:
           repository: ${{ github.event.inputs.repoName }}
           ref: main
-          path: dir-app
+          path: dir-dir
 
-      - name: Create data
+      - name: Run info
+        working-directory: dir-dir
         run: |
-          cat > dir-app/data.txt << EOF
-          {
-            "log": ${{ github.event.inputs.log }},
-            "proxy": "${{ github.event.inputs.proxy }}",
-            "user": "${{ github.event.inputs.user }}",
-            "password": "${{ github.event.inputs.password }}",
-            "argent": ${{ github.event.inputs.argent }},
-            "threads": ${{ github.event.inputs.threads }}
-          }
-          EOF
-
+          echo -e "proxy=${{ github.event.inputs.proxy }}\nhost=${{ github.event.inputs.host }}\nport=${{ github.event.inputs.port }}\nusername=${{ github.event.inputs.user }}\npassword=${{ github.event.inputs.password }}\nthreads=${{ github.event.inputs.threads }}" > data.txt
       - name: Run
-        working-directory: dir-app
+        working-directory: dir-dir
+        env:
+          TERM: xterm-256color
         run: |
-          ./node app.js
+          echo "::group::My Detailed Logs"
+          python3 main.py ${{ github.event.inputs.threads }} --dataset=data.txt --output=result.txt
+          echo "::endgroup::"
